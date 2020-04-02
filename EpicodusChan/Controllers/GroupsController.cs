@@ -35,14 +35,16 @@ namespace EpicodusChan.Solution.Controllers
           return  query.ToList();
         }
 
-        // GET api/values/5
+        // GET api/groups/5
         [HttpGet("{id}")]
         public ActionResult<Group> Get(int id)
         {
-            return _db.Groups.FirstOrDefault(entry => entry.GroupId == id);
+          Group thisGroup = _db.Groups.FirstOrDefault(group => group.GroupId == id);
+          thisGroup.Messages = _db.Messages.Where(messages => messages.GroupId == id).ToList();
+          return thisGroup;
         }
 
-        // POST api/messages
+        // POST api/groups
         [HttpPost]
         public void Post([FromBody] Group group)
         {
@@ -50,7 +52,7 @@ namespace EpicodusChan.Solution.Controllers
           _db.SaveChanges(); 
         }
 
-        // PUT api/messages/5
+        // PUT api/groups/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Group group)
         {
@@ -59,11 +61,11 @@ namespace EpicodusChan.Solution.Controllers
           _db.SaveChanges();
         }
 
-        // // DELETE api/values/5
+        // // DELETE api/groups/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-          var groupToDelete = _db.Groups.FirstOrDefault(entry => entry.GroupId == id);
+          var groupToDelete = _db.Groups.FirstOrDefault(group => group.GroupId == id);
           _db.Groups.Remove(groupToDelete);
           _db.SaveChanges();
         }
